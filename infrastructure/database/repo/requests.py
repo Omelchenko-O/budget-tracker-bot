@@ -13,6 +13,12 @@ class RequestsRepo:
     session: AsyncSession
     users: UserRepo = None
 
+    def create_table_user(self):
+        User.metadata.create_all()
+        ...
+
+
+
 # def example_usage():
 #     from infrastructure.database.setup import create_session_pool
 #     from tgbot.config import load_config

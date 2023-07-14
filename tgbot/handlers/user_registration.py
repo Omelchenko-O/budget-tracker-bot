@@ -18,7 +18,7 @@ async def user_registration_name(message: Message, state: FSMContext):
 
 @user_registration_router.message(Registration.ask_city)
 async def user_registration_city(message: Message, state: FSMContext):
-    await state.update_data(name=message.text)
+    await state.update_data(name=message.text, telegram_id=message.from_user.id)
     await message.answer('В якому місті ви живете?')
 
     await state.set_state(Registration.complete)
