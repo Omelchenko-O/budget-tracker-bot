@@ -1,5 +1,6 @@
 import datetime
 
+from sqlalchemy import VARCHAR, BigInteger
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import DeclarativeBase
@@ -8,7 +9,8 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.sql.functions import func
 from typing_extensions import Annotated
 
-int_pk = Annotated[int, mapped_column(primary_key=True)]
+int_pk = Annotated[int, mapped_column(BigInteger, primary_key=True)]
+str_100 = Annotated[str, mapped_column(VARCHAR(100))]
 
 
 class Base(DeclarativeBase):

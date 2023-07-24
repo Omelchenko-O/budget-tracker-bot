@@ -6,8 +6,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 
+from infrastructure.database.models.base import Base
 from infrastructure.database.setup import create_engine, create_session_pool
-from tgbot.config import load_config
+from tgbot.config import load_config, Config
 from tgbot.handlers import routers_list
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.middlewares.database import DatabaseMiddleware
@@ -22,7 +23,7 @@ async def on_startup(bot: Bot, admin_ids: list[int]):
     await broadcaster.broadcast(bot, admin_ids, "Бот був запущений")
 
 
-def register_global_middlewares(dp: Dispatcher, config, session_pool=None):
+def register_global_middlewares(dp: Dispatcher, config: Config, session_pool=None):
     dp.message.outer_middleware(ConfigMiddleware(config))
     dp.callback_query.outer_middleware(ConfigMiddleware(config))
 
@@ -57,6 +58,10 @@ async def main():
         config,
         session_pool=session_pool,
     )
+
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(Base.metadata.create_all)
+
 
     # await on_startup(bot, config.tg_bot.admin_ids)
     await bot.delete_webhook(drop_pending_updates=True)

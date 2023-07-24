@@ -3,6 +3,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from infrastructure.database.repo.requests import RequestsRepo
 from tgbot.misc.states import Registration
 
 user_registration_router = Router()
@@ -25,11 +26,17 @@ async def user_registration_city(message: Message, state: FSMContext):
 
 
 @user_registration_router.message(Registration.complete)
-async def user_registration_complete(message: Message, state: FSMContext):
+async def user_registration_complete(message: Message, state: FSMContext, repo: RequestsRepo):
     await state.update_data(city=message.text)
 
     user_data = await state.get_data()
     await message.answer(f'Дякую, реєстрацію завершено!\nПриємно познайомитись, <b>{user_data["name"]}</b>')
 
     # TODO add user to DB
+    await repo.users.create_user(
+        telegram_id=user_data['telegram_id'],
+        username=user_data['name'],
+        city=user_data['city']
+    )
+    await message.answer('added to db!')
     await state.clear()
