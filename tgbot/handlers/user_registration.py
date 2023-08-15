@@ -19,7 +19,11 @@ async def user_registration_name(message: Message, state: FSMContext):
 
 @user_registration_router.message(Registration.ask_city)
 async def user_registration_city(message: Message, state: FSMContext):
-    await state.update_data(name=message.text, telegram_id=message.from_user.id)
+    await state.update_data(
+        name=message.text,
+        telegram_id=message.from_user.id,
+        language=message.from_user.language_code
+    )
     await message.answer('В якому місті ви живете?')
 
     await state.set_state(Registration.complete)
@@ -36,7 +40,9 @@ async def user_registration_complete(message: Message, state: FSMContext, repo: 
     await repo.users.create_user(
         telegram_id=user_data['telegram_id'],
         username=user_data['name'],
-        city=user_data['city']
+        city=user_data['city'],
+        language=user_data['language']
     )
+
     await message.answer('added to db!')
     await state.clear()

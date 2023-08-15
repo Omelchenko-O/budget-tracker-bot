@@ -52,6 +52,5 @@ async def tracker_amount(message: Message, state: FSMContext):
 
     await message.answer(f'Витрату збережено: {data["category"], data["subcategory"], data["amount"]}',
                          reply_markup=budget_tracker_keyboard())
-    # await call.message.edit_text('Вкажіть суму витрати (лише число):')
 
     await state.clear()

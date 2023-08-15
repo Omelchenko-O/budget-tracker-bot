@@ -17,3 +17,4 @@ async def admin_start(message: Message):
 @admin_router.message(Command('admin'))
 async def create_tables(message: Message, config: Config):
     await message.answer(config.db.construct_sqlalchemy_url())
+    await message.answer(message.from_user.language_code)
